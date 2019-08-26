@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <title>登录</title>
+  <title>注册</title>
   <link rel="stylesheet" th:href="@{/css/reset.css}" type="text/css">
   <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
   <link rel="stylesheet" th:href="@{/css/reg.css}" type="text/css">
@@ -42,9 +42,20 @@
           <span>*</span>邮箱:
           <input name="email" class="validate[required,custom[email]]">
         </div>
+
+        <div class="input-item">
+            <span>*</span>验证码:
+            <input type="text" id="captchaValue" name="captcha">
+          <div>
+            <label >&nbsp;</label> <label> <img  id="captchaPic" height="30px"  alt="验证码"  onclick="changeCaptcha()">
+          </label>
+          </div>
+        </div>
+
         <div class="submit-btn">
           <input type="submit" value="注册">
         </div>
+
       </form>
     </div>
   </div>
@@ -75,6 +86,9 @@
   var g_rootPath = '[[${#servletContext.contextPath}]]'
 
   $(function () {
+    // 初始化验证码
+    changeCaptcha();
+
     var submitFormOptions = {
       url: g_rootPath + '/front/member/save',
       type: 'POST',
@@ -97,6 +111,9 @@
     // 提交注册表单信息
     $('#memberRegisterFrom').submit(
       function () {
+        var isCaptcha=validation()
+
+
         var isValid = $('#memberRegisterFrom').validationEngine(
           'validate', {
             promptPosition: 'centerRight',
@@ -108,6 +125,9 @@
         if (!isValid) {
           return false
         }
+        if(!isCaptcha){
+          return false;
+        }
         var password = $('#password').val()
         var restPassword = $('#restPassword').val()
         if (password != restPassword) {
@@ -118,7 +138,34 @@
         }
 
       })
+
   })
+
+  // 刷新验证码
+  function changeCaptcha() {
+    $('#captchaPic').attr("src", g_rootPath+'/captcha/generate?temp=' + Math.random());
+  }
+
+  // 利用 Ajax 方式验证码校验
+  function validation() {
+    $.ajax({
+      type : "post",
+      url : g_rootPath+'/captcha/check',
+      data : {
+        "captcha" : $("#captchaValue").val()
+      },
+      success : function(result) {
+        // 如果返回的状态是0表示操作成功
+        if (result.status == 0) {
+          return true;
+        } else {
+          toastr.error('验证码错误！');
+          $("#captchaValue").focus();
+          return false;
+        }
+      }
+    });
+  }
 </script>
 
 </html>

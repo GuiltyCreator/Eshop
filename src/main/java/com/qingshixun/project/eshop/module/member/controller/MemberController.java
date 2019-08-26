@@ -39,7 +39,7 @@ public class MemberController extends BaseController {
     public String activateAccount(@PathVariable String memberId, @PathVariable String validateCode) throws Exception {
         memberService.activeMember(memberId, validateCode);
         // 转向（forward）前端页面，文件：/WEB-INF/views/login.jsp
-        return "redirect:/front/login";
+        return "active";
     }
 
 }
