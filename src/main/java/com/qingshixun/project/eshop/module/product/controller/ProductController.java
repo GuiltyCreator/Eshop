@@ -1,10 +1,7 @@
 package com.qingshixun.project.eshop.module.product.controller;
 
 import com.qingshixun.project.eshop.core.Constants;
-import com.qingshixun.project.eshop.dto.CartItemDTO;
-import com.qingshixun.project.eshop.dto.EvaluateDTO;
-import com.qingshixun.project.eshop.dto.MemberDTO;
-import com.qingshixun.project.eshop.dto.ProductDTO;
+import com.qingshixun.project.eshop.dto.*;
 import com.qingshixun.project.eshop.module.brand.service.BrandServiceImpl;
 import com.qingshixun.project.eshop.module.cart.service.CartItemServiceImpl;
 import com.qingshixun.project.eshop.module.evaluate.service.EvaluateServiceImpl;
@@ -12,6 +9,7 @@ import com.qingshixun.project.eshop.module.order.service.OrderServiceImpl;
 import com.qingshixun.project.eshop.module.product.service.ProductCategoryServiceImpl;
 import com.qingshixun.project.eshop.module.product.service.ProductServiceImpl;
 import com.qingshixun.project.eshop.module.product.service.ProductTypeAttributeServiceImpl;
+import com.qingshixun.project.eshop.module.product.service.ProductTypeValueServiceImpl;
 import com.qingshixun.project.eshop.web.BaseController;
 import com.qingshixun.project.eshop.web.ResponseData;
 import com.qingshixun.project.eshop.web.SimpleHandler;
@@ -20,7 +18,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/front/product")
@@ -47,15 +49,66 @@ public class ProductController extends BaseController {
     @Autowired
     private OrderServiceImpl orderService;
 
+
     /**
      * 商品列表页
      */
     @RequestMapping("/list")
-    public String list(Model model, @RequestParam Long categoryId) {
-        List<ProductDTO> products = productService.getProductsByCategory(categoryId);
+    public String list(Model model, @RequestParam Long categoryId,
+                       @RequestParam(required = false)String[] searchItems,
+                       @RequestParam(required = false)Long brandId,
+                       @RequestParam(required = false)String  brandName,
+                       @RequestParam(required = false)String[] aId,
+                       HttpServletRequest request) {
+
+
+        List<String> selecteds=new ArrayList<>();
+        List<Long> aIds=new ArrayList<>();
+        List<ProductDTO> products=productService.getProductsByCategory(categoryId,brandId,null);
+
+        //添加URL和参数到model
+        String url="/front/product/list";
+        String query=request.getQueryString();
+        if(query!=null){
+            url=url+"?"+query;
+        }
+        model.addAttribute("url",url);
+
+        //将品牌Id添加到model中，用于判断是否已经选择
+        if (brandId != null) {
+            model.addAttribute("brandId",brandId);
+            selecteds.add(brandName);
+        }else {
+            model.addAttribute("brandId",null);
+        }
+
+        //将筛选条件加入到model中，用于判断是否已经选择该条件
+        if(searchItems!=null) {
+            for(int i=0;i<searchItems.length;i++){
+                if(i==0){
+                    products=productService.getProductsByCategory(categoryId,brandId,searchItems[0]);
+                }
+                else {
+                    List<ProductDTO> p=productService.getProductsByCategory(categoryId,brandId,searchItems[i]);
+                    products=getResultList(products,p);
+
+                }
+                selecteds.add(searchItems[i]);
+                aIds.add(Long.parseLong(aId[i]));
+            }
+        }
+
+        model.addAttribute("aIds",aIds);
+
+        model.addAttribute("selecteds",selecteds);
+
+
+
+
+        //List<ProductDTO> products = productService.getProductsByCategory(categoryId,brandId,searchItem);
+
 
         MemberDTO member = getCurrentUser();
-
         // 非空验证
         if (!products.isEmpty()) {
             // 获取第一个商品的类型id
@@ -72,6 +125,25 @@ public class ProductController extends BaseController {
 
         return "/product/list";
     }
+
+    /**
+     * 返回两个集合中相同的元素
+     * @param list1
+     * @param list2
+     * @return
+     */
+    public List<ProductDTO> getResultList(List<ProductDTO> list1,List<ProductDTO> list2){
+        List<ProductDTO> result = new ArrayList<>();
+        if (list1 != null && list2 != null) {
+
+            for (ProductDTO item : list1) {
+                if (list2.contains(item)) ;
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
 
     @RequestMapping("/main")
     public String main(Model model, @RequestParam Long productId) {

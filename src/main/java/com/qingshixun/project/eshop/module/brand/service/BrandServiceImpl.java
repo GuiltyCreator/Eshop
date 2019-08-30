@@ -21,4 +21,5 @@ public class BrandServiceImpl extends BaseService {
         return brandDao.getBrandsByCategory(categoryId);
     }
 
+
 }

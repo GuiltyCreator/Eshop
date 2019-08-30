@@ -17,4 +17,5 @@
       ptv.product_id = #{productId}
   </select>
 
+
 </mapper>
