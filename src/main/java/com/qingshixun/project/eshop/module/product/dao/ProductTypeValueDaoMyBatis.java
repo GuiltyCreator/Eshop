@@ -14,4 +14,5 @@ public interface ProductTypeValueDaoMyBatis {
      */
     List<ProductTypeValueDTO> getProductTypeValuesByProduct(@Param("productId") Long productId);
 
+
 }

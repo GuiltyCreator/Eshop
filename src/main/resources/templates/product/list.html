@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+
+
 <header th:replace="header::headerFragment('商品列表页')"></header>
 <link th:href="@{/css/product-select.css}" rel="stylesheet" type="text/css">
 <body>
@@ -26,19 +28,34 @@
   <div class="rightArea fr">
     <div class="selectMenuBox">
       <form method="get" action="list" name="pagingForm">
+
+        <input th:value="${categoryId}" name="categoryId" style="display: none">
+
         <div class="selectMenu">
+
+          <dl th:if="${not #lists.isEmpty(selecteds)}">
+            <dt>选择记录</dt>
+            <dd th:each="item : ${selecteds}">
+              <span th:text="${item}"></span> ->
+            </dd>
+          </dl>
+
           <dl th:if="${not #lists.isEmpty(brands)}">
-            <dt>品牌</dt>
+            <dt th:if="${brandId} == null">品牌</dt>
             <!-- 遍历品牌列表 -->
-            <dd th:each="brand : ${brands}">
-              <a class="searchItem" data-type="brand" th:data-id="${brand.id}" href="#" th:text="${brand.name}"></a>
+            <dd th:if="${brandId} == null" th:each="brand : ${brands}">
+              <!--<a class="searchItem" data-type="brand" th:data-id="${brand.id}" href="#" th:text="${brand.name}"></a>-->
+              <a  class="brandId"  data-type="brand" th:data-id="${brand.id}" th:href="@{${url}(brandId=${brand.id},brandName=${brand.name})}" th:text="${brand.name}"></a>
+              <!--<input name="brandId" id="brandId" type="radio" data-type="brand" th:data-id="${brand.id}" th:text="${brand.name}" th:value="${brand.id}">-->
             </dd>
           </dl>
           <!-- 商品属性筛选列表 -->
           <dl th:each="productTypeAttribute : ${productTypeAttributes}">
-            <dt th:text="${productTypeAttribute.name}"></dt>
-            <dd th:each="value : ${productTypeAttribute.values}">
-              <a class="searchItem" href="#" th:text="${value}"></a>
+            <dt th:if="${not #lists.contains(aIds,productTypeAttribute.id)}" th:text="${productTypeAttribute.name}"></dt>
+            <dd th:if="${not #lists.contains(aIds,productTypeAttribute.id)}" th:each="value : ${productTypeAttribute.values}">
+              <!--<a class="searchItem" href="?" th:text="${value}"></a>-->
+              <a class="searchItem"  th:href="@{${url}(searchItems=${value},aId=${productTypeAttribute.id})}" th:text="${value}"></a>
+              <!--<input name="searchItem" id="searchItem"  type="checkbox" th:text="${value}" th:value="${value}">-->
             </dd>
           </dl>
         </div>
@@ -70,12 +87,15 @@
 <div th:replace="footer::footer-body"></div>
 <div th:replace="footer::footer"></div>
 <script th:src="@{/js/product.js}"></script>
-<script>
+<script th:inline="javascript">
+
   $(function () {
     $('#searchPanel').show()
     //初始化商品列表js
     product.initList([[${categoryId}]])
+    $.ajax()
   })
+
 </script>
 </body>
 

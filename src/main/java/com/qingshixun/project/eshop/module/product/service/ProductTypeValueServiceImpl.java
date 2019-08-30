@@ -21,4 +21,5 @@ public class ProductTypeValueServiceImpl extends BaseService {
         return productTypeValueDao.getProductTypeValuesByProduct(productId);
     }
 
+
 }

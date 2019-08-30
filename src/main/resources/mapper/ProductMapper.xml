@@ -52,8 +52,25 @@
       (SELECT COUNT(ev.id) FROM qsx_evaluate ev WHERE ev.product_id = pr.id) AS 'evaluateCount'
     FROM
       qsx_product pr
+      <if test="brandId != null">
+        ,qsx_brand br
+      </if>
+      <if test="searchItem != null">
+        ,qsx_product_type_value prtv
+      </if>
+
     WHERE
       pr.productCategory_id = #{categoryId}
+      <if test="brandId != null">
+        AND pr.brand_id = br.id
+        AND br.id = #{brandId}
+      </if>
+
+    <if test="searchItem != null">
+      AND pr.id = prtv.product_id
+      AND prtv.value LIKE CONCAT('%',#{searchItem},'%')
+    </if>
+
   </select>
 
   <select id="getProductsByPrice" resultType="ProductDTO">
