@@ -27,7 +27,9 @@ public interface ProductDaoMyBatis {
     /**
      * 获取指定类型商品列表
      */
-    List<ProductDTO> getProductsByCategory(@Param("categoryId") Long categoryId);
+    List<ProductDTO> getProductsByCategory(@Param("categoryId") Long categoryIdString,
+                                            @Param("brandId")Long brandId,
+                                           @Param("searchItem")String searchItem);
 
     /**
      * 获取同价位商品列表
@@ -38,5 +40,6 @@ public interface ProductDaoMyBatis {
      * 获取产品详情
      */
     ProductDTO getProduct(@Param("productId") Long productId);
+
 
 }

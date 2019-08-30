@@ -41,8 +41,8 @@ public class ProductServiceImpl extends BaseService {
     /**
      * 获取指定类型商品列表
      */
-    public List<ProductDTO> getProductsByCategory(Long categoryId) {
-        return productDao.getProductsByCategory(categoryId);
+    public List<ProductDTO> getProductsByCategory(Long categoryId,Long brandId,String searchItem) {
+        return productDao.getProductsByCategory(categoryId,brandId,searchItem);
     }
 
     /**
