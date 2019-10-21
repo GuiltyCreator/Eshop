@@ -74,7 +74,7 @@ var cart = (function () {
         var param = id + '_' + count
         params += param + ','// 遍历选中的checkbox
       })
-      window.location.href = g_rootPath + '/front/order/settlement?params=' + params
+      window.location.href = g_rootPath + '/order/settlement?params=' + params
     })
     $('.min').click(function () {
       var t = $(this).parent().find('input[class*=text_box]')

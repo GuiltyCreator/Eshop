@@ -8,7 +8,7 @@
   <h3>地址编辑</h3>
 </header>
 
-<form id="receiverForm" name="receiver" role="form" th:action="@{/front/order/receiver/save/(orderId=${orderId})}" method="post" onSubmit="return false;">
+<form id="receiverForm" name="receiver" role="form" th:action="@{/order/receiver/save/(orderId=${orderId})}" method="post" onSubmit="return false;">
   <input type="hidden" name="id" th:value="${receiver.id }"/>
   <div>
     <div class="content">

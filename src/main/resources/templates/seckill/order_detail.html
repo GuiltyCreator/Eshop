@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <header th:replace="header::headerFragment('秒杀详情')"></header>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div th:replace="header::header-body"></div>
+<div class="panel panel-default">
+    <div class="panel-heading">秒杀订单详情</div>
+    <table class="table" id="goodslist">
+        <tr style="display: none">
+            <td>订单号<input type="text" id="orderId" th:value="${order.order.id}" th:text="${order.order.id}" colspan="3"></td>
+        </tr>
+        <tr>
+            <td>商品名称</td>
+            <td th:text="${product.product.name}" colspan="3"></td>
+        </tr>
+        <tr>
+            <td>商品图片</td>
+            <td colspan="2"><img th:src="@{${product.product.productImage}}" width="200"
+                                 height="200" /></td>
+        </tr>
+        <tr>
+            <td>订单价格</td>
+            <td colspan="2" th:text="${product.seckillPrice}"></td>
+        </tr>
+        <tr>
+            <td>下单时间</td>
+            <td
+                    th:text="${order.order.createTime}"
+                    colspan="2"></td>
+        </tr>
+        <tr>
+            <td>订单状态</td>
+            <td><span th:if="${order.order.status.name eq 'ORDS_UnPay'}">未支付</span> <span
+                    th:if="${order.order.status.name eq 'ORDS_Pay'}">已支付</span></td>
+            <td>
+                    <button class="btn btn-primary btn-block" type="submit" id="payButton" >立即支付</button>
+            </td>
+        </tr>
+        <tr>
+            <td>收货人</td>
+            <td colspan="2"><span th:text="${order.order.receiver.name}"></span></td>
+        </tr>
+        <tr>
+            <td>收货地址</td>
+            <td colspan="2"><span th:text="${order.order.receiver.areaPath + order.order.receiver.address }"></span></td>
+        </tr>
+    </table>
+</div>
+</body>
+<div th:replace="footer::footer-body"></div>
+<div th:replace="footer::footer"></div>
+<script>
+    var g_rootPath = '[[${#servletContext.contextPath}]]';
+    $(function () {
+        $('#payButton').on('click',function() {
+            /*$.ajax({
+                type:'GET',
+                async:false,
+                url :
+            })*/
+            window.location.href = g_rootPath + '/order/main/'+ $('#orderId').val();
+        })
+    })
+
+</script>
+
+
+</html>

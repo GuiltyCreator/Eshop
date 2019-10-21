@@ -25,4 +25,8 @@ public class Constants {
     // 加密key
     public static final String KEY = "3ab570d768290fa3b08e6f5e4c8d38fc";
 
+    //秒杀模块错误信息
+    public static String  SECKILL_OVER =  "商品已经秒杀完毕";
+    public static String  REPEATE_seckill = "不能重复秒杀";
+
 }

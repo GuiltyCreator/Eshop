@@ -37,9 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
           .authorizeRequests()
           // 所有用户均可访问的资源
-          .antMatchers("/plugins/**", "/css/**", "/js/**", "/images/**", "/product/**", "/front/**", "/","/captcha/**").permitAll()
+          .antMatchers("/plugins/**", "/css/**", "/js/**", "/images/**", "/product/**", "/front/**", "/","/captcha/**","/seckill/list","/seckill//to_detail").permitAll()
           // 拥有ROLE_USER权限才能访问的资源
-          .antMatchers("/front/order/main/*", "/front/order/list", "/front/order/settlement").hasRole("USER")
+          .antMatchers("/order/**").hasRole("USER")
           // 任何尚未匹配的URL只需要验证用户即可访问
           .anyRequest().authenticated()
           .and()

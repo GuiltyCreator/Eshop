@@ -5,6 +5,7 @@ import com.qingshixun.project.eshop.dto.*;
 import com.qingshixun.project.eshop.module.order.dao.OrderDaoMyBatis;
 import com.qingshixun.project.eshop.module.product.service.ProductServiceImpl;
 import com.qingshixun.project.eshop.module.receiver.service.ReceiverServiceImpl;
+import com.qingshixun.project.eshop.module.seckill.service.SeckillOrderServiceImpl;
 import com.qingshixun.project.eshop.web.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class OrderServiceImpl extends BaseService {
 
     @Autowired
     private ProductServiceImpl productService;
+
+    @Autowired
+    private SeckillOrderServiceImpl seckillOrderService;
 
     /**
      * 获取订单详情
@@ -121,7 +125,15 @@ public class OrderServiceImpl extends BaseService {
         }
         Double totalAmount = productTotalPrice;
         if (member.getMemberLevel() != null) {
-            totalAmount = productTotalPrice * member.getMemberLevel().getDiscount();
+            if(orderItems.size()==1) {
+                SeckillOrderDTO seckillOrder = seckillOrderService.getseckillOrderByMemberIdSeckillProductId(member.getId(),orderItems.get(0).getProduct().getId());
+                if(seckillOrder !=null){
+                    totalAmount = productTotalPrice;
+                }
+            }
+            else {
+                totalAmount = productTotalPrice * member.getMemberLevel().getDiscount();
+            }
         }
         BigDecimal bg = new BigDecimal(totalAmount);
         totalAmount = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();

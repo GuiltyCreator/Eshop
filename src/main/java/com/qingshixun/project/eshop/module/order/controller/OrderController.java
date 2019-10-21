@@ -1,15 +1,13 @@
 package com.qingshixun.project.eshop.module.order.controller;
 
-import com.qingshixun.project.eshop.dto.MemberDTO;
-import com.qingshixun.project.eshop.dto.OrderDTO;
-import com.qingshixun.project.eshop.dto.OrderItemDTO;
-import com.qingshixun.project.eshop.dto.ReceiverDTO;
+import com.qingshixun.project.eshop.dto.*;
 import com.qingshixun.project.eshop.module.cart.service.CartItemServiceImpl;
 import com.qingshixun.project.eshop.module.member.service.MemberServiceImpl;
 import com.qingshixun.project.eshop.module.order.service.OrderItemServiceImpl;
 import com.qingshixun.project.eshop.module.order.service.OrderServiceImpl;
 import com.qingshixun.project.eshop.module.product.service.ProductCategoryServiceImpl;
 import com.qingshixun.project.eshop.module.receiver.service.ReceiverServiceImpl;
+import com.qingshixun.project.eshop.module.seckill.service.SeckillOrderServiceImpl;
 import com.qingshixun.project.eshop.web.BaseController;
 import com.qingshixun.project.eshop.web.ResponseData;
 import com.qingshixun.project.eshop.web.SimpleHandler;
@@ -19,10 +17,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/front/order")
+@RequestMapping("/order")
 public class OrderController extends BaseController {
 
     @Autowired
@@ -43,6 +42,9 @@ public class OrderController extends BaseController {
     @Autowired
     private ProductCategoryServiceImpl productCategoryService;
 
+    @Autowired
+    private SeckillOrderServiceImpl seckillOrderService;
+
     /**
      * 进入我的订单页面
      *
@@ -59,6 +61,15 @@ public class OrderController extends BaseController {
         model.addAttribute("orders", orderService.getOrdersByMember(member.getId()));
         // 传递登录会员数据
         model.addAttribute("member", member);
+
+        List<SeckillOrderDTO> seckillOrders=seckillOrderService.getSeckillOrderByMemberId(member.getId());
+
+        List<Long> seckillOrderIds=new ArrayList<>();
+        for(SeckillOrderDTO item:seckillOrders){
+            seckillOrderIds.add(item.getOrder().getId());
+        }
+
+        model.addAttribute("seckillOrderIds",seckillOrderIds);
         return "/order/list";
     }
 
@@ -125,13 +136,13 @@ public class OrderController extends BaseController {
         MemberDTO member = this.getCurrentUser();
         OrderDTO order = orderService.saveOrder(orderId, member);
         model.addAttribute("receivers", receiverService.getReceiversByMember(member.getId()));
-        model.addAttribute("products", orderItemService.getOrderItemsByOrder(orderId));
+        model.addAttribute("orderItems", orderItemService.getOrderItemsByOrder(orderId));
         model.addAttribute("productTotalPrice", order.getProductTotalPrice());
         model.addAttribute("totalAmount", order.getTotalAmount());
         model.addAttribute("orderId", orderId);
         model.addAttribute("totalCartCount", cartItemService.getTotalCartCount(member, getSession()));
         model.addAttribute("member", member);
-        return "/front/order/main";
+        return "/order/main";
     }
 
     @RequestMapping("/receiver/form/{receiverId}")
@@ -245,5 +256,4 @@ public class OrderController extends BaseController {
             }
         }.handle();
     }
-
 }

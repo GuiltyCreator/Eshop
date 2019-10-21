@@ -134,12 +134,20 @@ public class ProductController extends BaseController {
      */
     public List<ProductDTO> getResultList(List<ProductDTO> list1,List<ProductDTO> list2){
         List<ProductDTO> result = new ArrayList<>();
-        if (list1 != null && list2 != null) {
+        if (list2 != null && list1 != null) {
 
-            for (ProductDTO item : list1) {
-                if (list2.contains(item)) ;
-                result.add(item);
+
+            for(int i=0; i<list1.size();i++){
+                if(list2.get(i).getId()==list1.get(i).getId()){
+                    result.add(list1.get(i));
+                }
             }
+            /*for (ProductDTO item : list1) {
+                if (list2.contains(item)){
+                    result.add(item);
+                }
+
+            }*/
         }
         return result;
     }

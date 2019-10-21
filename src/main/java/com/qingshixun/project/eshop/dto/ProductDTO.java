@@ -56,6 +56,9 @@ public class ProductDTO extends BaseDTO {
     // 商品图片路径存储
     private String productImage;
 
+    //商品图片绝对路径
+    private String smallProductImage;
+
     // 商品分类
     private ProductCategoryDTO productCategory;
 
@@ -73,6 +76,8 @@ public class ProductDTO extends BaseDTO {
 
     // 评论数量
     private Integer evaluateCount;
+
+    private String [] thumbnails ;
 
     // 商品类型属性列表
     private List<ProductTypeValueDTO> values = Lists.newArrayList();
@@ -198,7 +203,13 @@ public class ProductDTO extends BaseDTO {
     }
 
     public void setProductImage(String productImage) {
-        this.productImage = productImage;
+        if(productImage.contains("http://localhost:8081/eweb/product/"))
+        {
+            this.productImage=productImage.substring(35);
+        }
+        else {
+            this.productImage = productImage;
+        }
     }
 
     public String[] getThumbnails() {

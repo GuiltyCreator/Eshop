@@ -9,6 +9,7 @@
       oi.productQuantity,
       pr.id AS 'product.id',
       pr.name AS 'product.name',
+      pr.price AS 'product.price',
       pr.productImage AS 'product.productImage',
       oi.totalPrice,
       oi.order_id AS 'order.id',

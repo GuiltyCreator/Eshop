@@ -35,7 +35,8 @@
       <!--<c:forEach var="order" items="${orders}">-->
       <div th:each="order : ${orders}">
         <ul class="product_time">
-          <li th:text="${order.updateTime}"></li>
+          <li th:text="${order.updateTime}"  th:if="${not #lists.contains(seckillOrderIds,order.id)}"></li>
+          <li th:text="${order.updateTime + '秒杀订单'}" th:if="${#lists.contains(seckillOrderIds,order.id)}"></li>
         </ul>
         <ul class="product_con">
           <li class="pro">
@@ -48,10 +49,10 @@
           <!-- 根据付款状态显示不同的文字，付款的显示评价，没付款的显示去付款 -->
           <!--<c:choose>-->
           <!--<c:when test="${order.orderStatus.code=='ORDS_Pay'}">-->
-          <li th:if="${order.status.code} == 'ORDS_Pay'"><a th:href="@{'/front/order/detail/'+${order.id}}">评价</a></li>
+          <li th:if="${order.status.code} == 'ORDS_Pay'"><a th:href="@{'/order/detail/'+${order.id}}">评价</a></li>
           <!--</c:when>-->
           <!--<c:otherwise>-->
-          <li th:if="${order.status.code} != 'ORDS_Pay'"><a th:href="@{'/front/order/main/'+${order.id}}">去付款</a></li>
+          <li th:if="${order.status.code} != 'ORDS_Pay'"><a th:href="@{'/order/main/'+${order.id}}">去付款</a></li>
           <!--</c:otherwise>-->
           <!--</c:choose>-->
         </ul>

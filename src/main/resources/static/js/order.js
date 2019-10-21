@@ -18,7 +18,7 @@ var order = (function() {
 		$('.eidt_receiver').click(function(e) {
 			e.preventDefault();
 			var receiverId = $(this).data("id");
-			$("#popup1").load(g_rootPath + "/front/order/receiver/form/" + receiverId);
+			$("#popup1").load(g_rootPath + "/order/receiver/form/" + receiverId);
 			$(".modal-overlay").fadeTo(500, 0.7);
 			var modalBox = $(this).attr('data-modal-id');
 			$('#' + modalBox).fadeIn($(this).data());
@@ -26,7 +26,7 @@ var order = (function() {
 		// 点击新增收货人按钮触发弹出层
 		$('.add_receiver').click(function(e) {
 			e.preventDefault();
-			$("#popup1").load(g_rootPath + "/front/order/receiver/form/0/");
+			$("#popup1").load(g_rootPath + "/order/receiver/form/0/");
 			$(".modal-overlay").fadeTo(500, 0.7);
 			var modalBox = $(this).attr('data-modal-id');
 			$('#' + modalBox).fadeIn($(this).data());
@@ -34,7 +34,7 @@ var order = (function() {
 		// 点击设置为默认联系人触发事件
 		$(".set_default_receiver").click(function() {
 			var receiverId = $(this).data("id");
-			$.post(g_rootPath + "/front/order/set/default/receiver/" + receiverId, function(response) {
+			$.post(g_rootPath + "/order/set/default/receiver/" + receiverId, function(response) {
 				$("#searchPanel").hide();
 				window.location.reload();
 			});
@@ -56,7 +56,7 @@ var order = (function() {
 					if (receiverId === null) {
 						toastr.warning('请先设置默认联系人！');
 					} else {
-						$.post(g_rootPath + "/front/order/commit/" + pargrams + "/" + receiverId, function(response) {
+						$.post(g_rootPath + "/order/commit/" + pargrams + "/" + receiverId, function(response) {
 							if (response.status === '0') {
 								var orderId = response.data;
 								payDiv = $(
@@ -65,11 +65,11 @@ var order = (function() {
 												+ '</div>' + '</div>').alertconfirm();
 								// 点击确认付款
 								payDiv.on('confirm.ms.alert', function(e) {
-									$.post(g_rootPath + "/front/order/pay/" + orderId, function(response) {
+									$.post(g_rootPath + "/order/pay/" + orderId, function(response) {
 										if (response.status === '0') {
 											toastr.success('付款成功！');
 											payDiv.alertconfirm('hide');
-											window.location.href = g_rootPath + "/front/order/list";
+											window.location.href = g_rootPath + "/order/list";
 										}
 
 									});
@@ -85,7 +85,7 @@ var order = (function() {
 		// 点击删除按钮触发事件
 		$(".delete-receiver-btn").click(function() {
 			var id = $(this).data("id");
-			var url = g_rootPath + "/front/order/receiver/delete/"+id;
+			var url = g_rootPath + "/order/receiver/delete/"+id;
 			var confirmDiv = $(
 					'<div class="ms-alert">' + '<div class="ms-alert-body">' + '<div class="ms-alert-content">是否删除联系人</div>' + '<div class="ms-alert-buttons">'
 							+ '<div class="ms-alert-button confirm">确定</div>' + '<div class="ms-alert-button cancel">取消</div>' + '</div>' + '</div>' + '</div>').alertconfirm();
@@ -101,7 +101,7 @@ var order = (function() {
 						}else{
 							toastr.warning(result.data);
 						}
-						//window.location.href = g_rootPath + "/front/order/main";
+						//window.location.href = g_rootPath + "/order/main";
 					}
 				});
 				e.preventDefault();
@@ -119,11 +119,11 @@ var order = (function() {
 									+ '</div>').alertconfirm();
 					// 点击确认付款
 					payDiv.on('confirm.ms.alert', function(e) {
-						$.post(g_rootPath + "/front/order/pay/" + orderId, function(response) {
+						$.post(g_rootPath + "/order/pay/" + orderId, function(response) {
 							if (response.status === '0') {
 								toastr.success('付款成功！');
 								payDiv.alertconfirm('hide');
-								window.location.href = g_rootPath + "/front/order/list";
+								window.location.href = g_rootPath + "/order/list";
 								
 							}
 

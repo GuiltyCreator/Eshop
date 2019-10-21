@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingshixun.project.eshop.module.seckill.dao.SeckillOrderDaoMyBatis">
+    <insert id="insert" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="SeckillOrderDTO">
+        INSERT INTO qsx_seckill_order(
+        id,
+        order_id,
+        member_id,
+        product_id
+        )
+        VALUES (
+        #{id},
+        #{order.id},
+        #{order.member.id},
+        #{productId}
+        )
+        ON DUPLICATE KEY UPDATE
+        id = #{id},
+        order_id = #{order.id},
+        member_id = #{order.member.id},
+        product_id = #{productId}
+    </insert>
+    <select id="getseckillOrderByMemberIdSeckillProductId" resultType="SeckillOrderDTO">
+        SELECT
+        id,
+        order_id AS 'order.id',
+        member_id AS 'order.member.id',
+        product_id AS 'productId'
+        FROM
+        qsx_seckill_order qso
+        WHERE
+        qso.member_id = #{memberId}
+        AND qso.product_id = #{productId}
+
+    </select>
+
+    <select id="getSeckillOrderByMemberId" resultType="SeckillOrderDTO">
+        select
+        id,
+        order_id AS 'order.id',
+        member_id AS 'order.member.id',
+        product_id AS 'productId'
+        from
+        qsx_seckill_order qso
+        where
+        member_id=#{memberId}
+    </select>
+</mapper>
